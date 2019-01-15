@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import Home from '../views/home/Home.vue'
-// import Login from '../views/Login.vue'
-import Lock from '../views/Lock.vue'
-import Test from '../views/Test.vue'
-import RoomInfor from '../views/RoomInformation.vue'
+// // import Login from '../views/Login.vue'
+// import Lock from '../views/Lock.vue'
+// import Test from '../views/Test.vue'
+// import RoomInfor from '../views/RoomInformation.vue'
 
 Vue.use(Router)
-
 
 import Layout from '../views/layout/Layout'
 import Container from '../views/layout/Container'
@@ -44,133 +43,133 @@ export const constantRouterMap = [
     component: Container,
     redirect: '/home',
     children: [
-      {path: '', name: 'Home', component: () => import('@/views/home/index'),}
+      { path: '', name: 'Home', component: () => import('@/views/home/index') }
     ]
   },
-  {path: '/roomType', component: Container, children: [
-      {path: '', name: 'RoomType', component: () => import('@/views/roomType/index')},
-      {
-        path: 'add',
-        name: 'addType',
-        hidden: true,
-        component: () => import('@/views/roomType/add'),
-        meta: { title: '添加房间类型' }
-      },
-      {
-        path: 'edit',
-        name: 'EditType',
-        hidden: true,
-        component: () => import('@/views/roomType/edit'),
-        meta: { title: '编辑房间类型' }
-      }
-    ]},
-  {path: '/roomInfo', component: Container, children: [
-      {
-        path: '',
-        name: 'RoomInfo',
-        component: () => import('@/views/roomInfo/index'),
-        meta: { title: '房间信息管理', icon: 'table' }
-      },
-      {
-        path: 'add',
-        name: 'addRoom',
-        hidden: true,
-        component: () => import('@/views/roomInfo/add'),
-        meta: { title: '添加房间' }
-      },
-      {
-        path: 'edit',
-        name: 'EditRoom',
-        hidden: true,
-        component: () => import('@/views/roomInfo/edit'),
-        meta: { title: '编辑房间' }
-      }
-    ]},
-  {path: '/worker', component: Container, children: [
-      {
-        path: '',
-        name: 'Worker',
-        component: () => import('@/views/worker/index'),
-      },
-      {
-        path: 'add',
-        name: 'AddWorker',
-        hidden: true,
-        component: () => import('@/views/worker/add'),
-      },
-      {
-        path: 'edit',
-        name: 'EditWorker',
-        hidden: true,
-        component: () => import('@/views/worker/edit'),
-      }
-    ]},
-  {path: '/bookingType', component: Container, meta: { title: '预订方式管理', icon: 'tree' }, children: [
-      {
-        path: '',
-        name: 'BookingType',
-        component: () => import('@/views/bookingType/index'),
-        meta: { title: '预订方式管理', icon: 'tree' }
-      },
-      {
-        path: 'add',
-        name: 'AddBookingType',
-        hidden: true,
-        component: () => import('@/views/bookingType/add'),
-        meta: { title: '添加预订方式' }
-      },
-      {
-        path: 'edit',
-        name: 'EditBookingType',
-        hidden: true,
-        component: () => import('@/views/bookingType/edit'),
-        meta: { title: '编辑预订方式' }
-      }
-    ]},
-  {path: '/order', component: Container, meta: { title: '订单管理', icon: 'tree' }, children: [
-      {
-        path: '',
-        name: 'Order',
-        component: () => import('@/views/order/order'),
-        meta: { title: '订单管理', icon: 'tree' }
-      },
-      {
-        path: 'add',
-        name: 'AddOrder',
-        hidden: true,
-        component: () => import('@/views/order/add'),
-        meta: { title: '添加订单' }
-      },
-      {
-        path: 'edit',
-        name: 'EditOrder',
-        hidden: true,
-        component: () => import('@/views/order/edit'),
-        meta: { title: '编辑订单'}
-      }
-    ]},
-  {path: '/user', component: Container, meta: { title: '客户管理', icon: 'tree' }, children: [
-      {
-        path: '',
-        name: 'Guest',
-        component: () => import('@/views/guest/index'),
-        meta: { title: '客户管理', icon: 'tree' }
-      },
-      {
-        path: 'add',
-        name: 'AddGuest',
-        hidden: true,
-        component: () => import('@/views/guest/add'),
-        meta: { title: '添加客户' }
-      },
-      {
-        path: 'edit',
-        name: 'EditGuest',
-        hidden: true,
-        component: () => import('@/views/guest/edit'),
-        meta: { title: '编辑客户'}
-      }
-    ]},
+  { path: '/roomType', component: Container, children: [
+    { path: '', name: 'RoomType', component: () => import('@/views/roomType/index') },
+    {
+      path: 'add',
+      name: 'addType',
+      hidden: true,
+      component: () => import('@/views/roomType/add'),
+      meta: { title: '添加房间类型' }
+    },
+    {
+      path: 'edit',
+      name: 'EditType',
+      hidden: true,
+      component: () => import('@/views/roomType/edit'),
+      meta: { title: '编辑房间类型' }
+    }
+  ] },
+  { path: '/roomInfo', component: Container, children: [
+    {
+      path: '',
+      name: 'RoomInfo',
+      component: () => import('@/views/roomInfo/index'),
+      meta: { title: '房间信息管理', icon: 'table' }
+    },
+    {
+      path: 'add',
+      name: 'addRoom',
+      hidden: true,
+      component: () => import('@/views/roomInfo/add'),
+      meta: { title: '添加房间' }
+    },
+    {
+      path: 'edit',
+      name: 'EditRoom',
+      hidden: true,
+      component: () => import('@/views/roomInfo/edit'),
+      meta: { title: '编辑房间' }
+    }
+  ] },
+  { path: '/worker', component: Container, children: [
+    {
+      path: '',
+      name: 'Worker',
+      component: () => import('@/views/worker/index')
+    },
+    {
+      path: 'add',
+      name: 'AddWorker',
+      hidden: true,
+      component: () => import('@/views/worker/add')
+    },
+    {
+      path: 'edit',
+      name: 'EditWorker',
+      hidden: true,
+      component: () => import('@/views/worker/edit')
+    }
+  ] },
+  { path: '/bookingType', component: Container, meta: { title: '预订方式管理', icon: 'tree' }, children: [
+    {
+      path: '',
+      name: 'BookingType',
+      component: () => import('@/views/bookingType/index'),
+      meta: { title: '预订方式管理', icon: 'tree' }
+    },
+    {
+      path: 'add',
+      name: 'AddBookingType',
+      hidden: true,
+      component: () => import('@/views/bookingType/add'),
+      meta: { title: '添加预订方式' }
+    },
+    {
+      path: 'edit',
+      name: 'EditBookingType',
+      hidden: true,
+      component: () => import('@/views/bookingType/edit'),
+      meta: { title: '编辑预订方式' }
+    }
+  ] },
+  { path: '/order', component: Container, meta: { title: '订单管理', icon: 'tree' }, children: [
+    {
+      path: '',
+      name: 'Order',
+      component: () => import('@/views/order/order'),
+      meta: { title: '订单管理', icon: 'tree' }
+    },
+    {
+      path: 'add',
+      name: 'AddOrder',
+      hidden: true,
+      component: () => import('@/views/order/add'),
+      meta: { title: '添加订单' }
+    },
+    {
+      path: 'edit',
+      name: 'EditOrder',
+      hidden: true,
+      component: () => import('@/views/order/edit'),
+      meta: { title: '编辑订单' }
+    }
+  ] },
+  { path: '/user', component: Container, meta: { title: '客户管理', icon: 'tree' }, children: [
+    {
+      path: '',
+      name: 'Guest',
+      component: () => import('@/views/guest/index'),
+      meta: { title: '客户管理', icon: 'tree' }
+    },
+    {
+      path: 'add',
+      name: 'AddGuest',
+      hidden: true,
+      component: () => import('@/views/guest/add'),
+      meta: { title: '添加客户' }
+    },
+    {
+      path: 'edit',
+      name: 'EditGuest',
+      hidden: true,
+      component: () => import('@/views/guest/edit'),
+      meta: { title: '编辑客户' }
+    }
+  ] },
   { path: '*', redirect: '/404', hidden: true }
 ]
 export default new Router({
@@ -218,13 +217,13 @@ export default new Router({
 //     path: '/login',
 //     name: 'Login',
 //     component: Login,
-   
+
 //   },
 //   {
 //     path: '/lock',
 //     name: 'Lock',
 //     component: Lock,
-    
+
 //   },
 // ]
 

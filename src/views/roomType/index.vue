@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="always">
     <div slot="header">
       <span>房间类型管理</span>
-      <el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>
+      <!--<el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>-->
     </div>
     <el-table
       ref="multipleTable"
@@ -14,9 +14,6 @@
       <el-table-column
         type="selection"
         width="55"/>
-      <!--<el-table-column-->
-        <!--prop="typeId"-->
-        <!--label="编号"/>-->
       <el-table-column
         label="房间类型">
         <template slot-scope="scope">
@@ -60,16 +57,6 @@
           </el-popover>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-        <!--label="修改时间|创建时间">-->
-        <!--<template slot-scope="scope">-->
-          <!--<i class="el-icon-time"/>-->
-          <!--<span style="margin-left: 10px">{{ scope.row.updateTime | formatDate }}</span>-->
-          <!--<br>-->
-          <!--<i class="el-icon-time"/>-->
-          <!--<span style="margin-left: 10px">{{ scope.row.createTime | formatDate }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -90,6 +77,15 @@
       </el-table-column>
     </el-table>
     <div style="padding: 14px;">
+      <el-pagination
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="list.length"
+        style="float: right"
+        background
+        layout="total, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
       <div class="bottom">
         <el-button type="primary" @click="navigateTo('add')">添加房间类型</el-button>
         <el-button type="danger" @click="massDeletion">批量删除</el-button>
@@ -99,7 +95,6 @@
 </template>
 
 <script>
-// import { getAllRoomType, delRoomType } from '@/api/roomType'
 
 export default {
   filters: {
@@ -114,15 +109,22 @@ export default {
       multipleSelection: [],
       listLoading: true,
       list: [],
-      loading: false
+      loading: false,
+      currentPage: 1,
+      pageSize: 10
     }
   },
   created: function() {
     this.fetchData()
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageSize = val
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
     fetchData() {
-
       this.listLoading = true
       this.$http.get('http://localhost:3000/RoomType/').then(response => {
         this.list = response.data
@@ -155,7 +157,7 @@ export default {
       row.loading = true
 
       this.$http.delete(`http://localhost:3000/RoomType/${row._id}`).then(response => {
-        if (response) {
+        if (response.data) {
           this.fetchData()
           this.$message({
             message: '删除成功！',
@@ -169,7 +171,6 @@ export default {
         }
       })
       row.loading = false
-
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
@@ -186,7 +187,6 @@ export default {
           type: 'success'
         })
       }, 0)
-
     }
   }
 }

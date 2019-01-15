@@ -3,7 +3,7 @@
     <div slot="header">
       <span>添加订单</span>
     </div>
-    <el-form ref="form1" :model="form1" >
+    <el-form ref="form" :model="form" >
       <el-form-item
         :rules="[
           { required: true, message: '不能为空'}
@@ -11,7 +11,7 @@
         label="入住人"
         prop="name"
       >
-        <el-input v-model="form1.name" placeholder="请输入入住人姓名"/>
+        <el-input v-model="form.name" placeholder="请输入入住人姓名"/>
       </el-form-item>
       <el-form-item
         :rules="[
@@ -20,16 +20,27 @@
         label="手机号"
         prop="phone"
       >
-        <el-input v-model="form1.phone" placeholder="请输入预留手机号"/>
+        <el-input v-model="form.phone" placeholder="请输入预留手机号"/>
       </el-form-item>
       <el-form-item
         :rules="[
           { required: true, message: '不能为空'}
         ]"
         label="房间类型">
-        <el-select v-model="form1.roomType" :change="idToType('', form1.roomType)" placeholder="请选择房间类型">
+        <el-select v-model="form.roomType" :change="idToType('', form.roomType)" placeholder="请选择房间类型">
           <el-option v-for="rt in roomTypeList" :label="rt.room_type_name" :value="rt.room_type_name" :key="rt.room_type_name">
             {{ rt.room_type_name + '(' + rt.price + '元)' }}
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        :rules="[
+          { required: true, message: '不能为空'}
+        ]"
+        label="房间号码">
+        <el-select v-model="form.roomNumber" placeholder="请选择房间号码">
+          <el-option v-for="item in roomNumberList" :label="item.roomNumber" :value="item.roomNumber" :key="item.roomNumber">
+            {{ item.roomNumber }}
           </el-option>
         </el-select>
       </el-form-item>
@@ -40,7 +51,7 @@
         label="入住日期"
       >
         <el-date-picker
-          v-model="orderDateRange"
+          v-model="form.orderDateRange"
           type="daterange"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -54,14 +65,14 @@
         prop="orderDays"
       >
         <!--<el-input-number v-model="form1.orderDays" @change="idToType(form1.roomTypeId)" :min="1" label="预订天数"></el-input-number>-->
-        {{ form1.orderDays + ' 晚' }}
+        {{ form.orderDays + ' 晚' }}
       </el-form-item>
       <el-form-item
         :rules="[
           { required: true, message: '不能为空'}
         ]"
         label="预订方式">
-        <el-select v-model="form1.orderType" :change="idToType(form1.orderType, '')" placeholder="请选择预订方式">
+        <el-select v-model="form.orderType" :change="idToType(form.orderType, '')" placeholder="请选择预订方式">
           <el-option v-for="t in orderTypeList" :label="t.type" :value="t.type" :key="t.type">
             {{ t.type }}
           </el-option>
@@ -75,7 +86,7 @@
         label="订单费用"
         prop="orderCost"
       >
-        {{ '￥' + form1.orderCost }}
+        {{ '￥' + form.orderCost }}
       </el-form-item>
       <el-form-item>
         <el-button :loading="loading" type="primary" @click="onSubmit()">提交</el-button>
@@ -91,21 +102,23 @@ export default {
   name: 'Add',
   data() {
     return {
-      form1: {
-        orderTypeId: null,
+      form: {
         orderType: null,
         roomType: null,
-        userId: 0,
+        roomNumber: null,
         name: null,
         phone: null,
-        orderDate: null,
+        orderDateRange: null,
         orderDays: 0,
-        orderCost: 0
+        orderCost: 0,
+        is_removed: false
       },
+      count: 0,
       orderDateRange: null,
       loading: false,
       roomTypeList: [],
-      orderTypeList: []
+      orderTypeList: [],
+      roomNumberList: []
     }
   },
   created: function() {
@@ -117,42 +130,59 @@ export default {
         this.orderTypeList = res.data
       }).then(() => {
         this.$http.get('http://localhost:3000/RoomType/').then(response => {
+          console.log(response.data)
           this.roomTypeList = response.data
         })
       })
     },
-    idToType(otId, rtId) {
-      if (rtId == null) {
+    idToType(ot, rt) {
+      if (!rt || rt === undefined) {
         this.orderTypeList.forEach(t => {
-          if (otId === t.typeId) {
-            this.form1.orderType = t.type
+          if (ot === t.type) {
+            this.form.orderType = t.type
           }
         })
       } else {
         this.roomTypeList.forEach(type => {
-          if (rtId === type.typeId) {
-            this.form1.roomType = type.roomType
-            this.form1.orderCost = type.price * this.form1.orderDays
+          if (rt === type.room_type_name) {
+            this.form.roomType = type.room_type_name
+            this.form.orderCost = type.price * this.form.orderDays
+            return
           }
         })
+        if (this.count === 0) {
+          this.$http.post(`http://localhost:3000/RoomInfo/roomNumber`, { 'roomType': rt }).then(response => {
+            console.log(response)
+            if (response.data.length) {
+              this.roomNumberList = response.data
+            } else {
+              this.$message({
+                message: '没有空闲房间',
+                type: 'error'
+              })
+            }
+          })
+          this.count++
+        }
       }
     },
     calcDays() {
-      this.form1.orderDate = this.orderDateRange[0]
-      this.form1.orderDays = this.orderDateRange[1].getDate() - this.orderDateRange[0].getDate()
+      this.form.orderDays = this.form.orderDateRange[1].getDate() - this.form.orderDateRange[0].getDate()
     },
     onSubmit() {
-      this.$refs.form1.validate((valid) => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.loading = true
-          addOrder(this.form1).then(response => {
-            if (response === 1) {
+          console.log(this.form.orderDateRange)
+          this.$http.post('http://localhost:3000/Order/add', this.form).then(response => {
+            if (response) {
               this.$message({
                 message: '提交成功！',
                 type: 'success'
               })
               this.loading = false
-              setTimeout(this.onCancel(), 20000)
+              this.$http.put('http://localhost:3000/RoomInfo/info', this.form)
+              setTimeout(this.onCancel(), 2000)
             } else {
               this.showError()
               this.loading = false

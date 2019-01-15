@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const OrderSchema = new Schema({
-  roomNumber: {
+  orderType: {
     type: String,
     required: true,
     unique: true
@@ -12,15 +12,28 @@ const OrderSchema = new Schema({
     required: true,
     unique: true
   },
-  roomPrice: {
+  roomNumber: {
+    type: Number,
+    required: true,
+    unique: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  orderDateRange: {
+    type: Array,
+    required: true
+  },
+  phone: {
     type: Number,
     required: true
   },
-  roomDiscount: {
+  orderDays: {
     type: Number,
     required: true
   },
-  roomStatus: {
+  orderCost: {
     type: Number,
     required: true
   },

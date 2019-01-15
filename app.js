@@ -59,8 +59,7 @@ app.use('/RoomInfo', roomInfo)
 app.use('/BookingType', bookingType)
 app.use('/Guest', guest)
 app.use('/Order', order)
-app.use('/user', user)
+app.use('/User', user)
 app.post('/logout', logout) // 用户注销
-// app.get('/getRoom', getRoom);
 
 module.exports = app

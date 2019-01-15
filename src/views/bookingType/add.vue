@@ -109,7 +109,7 @@ export default {
         if (valid) {
           this.loading = true
           add(this.form1).then(response => {
-            if (response === 1) {
+            if (response.data) {
               this.$message({
                 message: '提交成功！',
                 type: 'success'

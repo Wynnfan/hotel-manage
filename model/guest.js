@@ -2,25 +2,19 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const GuestSchema = new Schema({
-  roomNumber: {
+  name: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
-  roomType: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  roomPrice: {
+  phone: {
     type: Number,
     required: true
   },
-  roomDiscount: {
-    type: Number,
+  gender: {
+    type: String,
     required: true
   },
-  roomStatus: {
+  idcard: {
     type: Number,
     required: true
   },
@@ -33,9 +27,6 @@ const GuestSchema = new Schema({
   is_removed: {
     type: Boolean,
     required: true
-  },
-  remark: {
-    type: String
   }
 })
 

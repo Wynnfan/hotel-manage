@@ -4,8 +4,7 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  RoomType.find({is_removed: false }).then(roomType => {
-    console.log(roomType)
+  RoomType.find({ is_removed: false }).then(roomType => {
     res.json(roomType)
   }).catch(err => {
     res.json(err)
@@ -27,7 +26,6 @@ router.post('/add', (req, res) => {
   }
 
   RoomType.create(roomTypes, (err, roomType) => {
-
     if (err) {
       console.log(err)
       res.json(err)

@@ -2,21 +2,18 @@
   <el-card class="box-card" shadow="always">
     <div slot="header">
       <span>订单信息管理</span>
-      <el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>
+      <!--<el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>-->
     </div>
     <el-table
       ref="multipleTable"
       :loading="listLoading"
-      :data="list.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+      :data="list.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
         width="55"/>
-      <!--<el-table-column-->
-      <!--prop="orderId"-->
-      <!--label="编号"/>-->
       <el-table-column
         prop="orderType"
         label="预订方式"/>
@@ -31,20 +28,20 @@
         label="预留手机号"/>
       <el-table-column
         prop="orderDate"
-        label="预订日期">
+        label="创建订单时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderDate | formatDate }}</span>
+          <span>{{ scope.row.orderDateRange[0] | formatDate }}</span>
         </template>
       </el-table-column>
       <el-table-column
         prop="orderDays"
-        label="预定天数"/>
-      <el-table-column
-        label="订单状态">
-        <template slot-scope="scope">
-          {{ scope.row.orderStatus | getOrderStatus }}
-        </template>
-      </el-table-column>
+        label="预定天数" />
+      <!--<el-table-column-->
+      <!--label="订单状态">-->
+      <!--<template slot-scope="scope">-->
+      <!--{{ scope.row.orderStatus | getOrderStatus }}-->
+      <!--</template>-->
+      <!--</el-table-column>-->
       <el-table-column
         sortable
         label="订单消费">
@@ -52,16 +49,16 @@
           ￥ {{ scope.row.orderCost }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="修改时间|创建时间">
-        <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span style="margin-left: 10px">{{ scope.row.updateTime | formatDate }}</span>
-          <br>
-          <i class="el-icon-time"/>
-          <span style="margin-left: 10px">{{ scope.row.createTime | formatDate }}</span>
-        </template>
-      </el-table-column>
+      <!--<el-table-column-->
+      <!--label="修改时间|创建时间">-->
+      <!--<template slot-scope="scope">-->
+      <!--<i class="el-icon-time"/>-->
+      <!--<span style="margin-left: 10px">{{ scope.row.updateTime | formatDate }}</span>-->
+      <!--<br>-->
+      <!--<i class="el-icon-time"/>-->
+      <!--<span style="margin-left: 10px">{{ scope.row.createTime | formatDate }}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -86,7 +83,7 @@
     <div style="padding: 14px;">
       <el-pagination
         :current-page="currentPage"
-        :page-size="pagesize"
+        :page-size="pageSize"
         :total="list.length"
         style="float: right"
         background
@@ -111,7 +108,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      pagesize: 10,
+      pageSize: 10,
       list: [],
       visible2: false,
       loading: null,
@@ -124,7 +121,7 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
-      this.pagesize = val
+      this.pageSize = val
     },
     handleCurrentChange(val) {
       this.currentPage = val
@@ -142,13 +139,11 @@ export default {
     navigateTo(val) {
       this.$router.push('/order/' + val)
     },
-    massDeletion() {
-    },
     handleDel(row) {
       row.visible2 = false
       row.loading = true
       this.$http.delete(`http://localhost:3000/Order/${row._id}`).then(response => {
-        if (response === 1) {
+        if (response.data) {
           this.$message({
             message: '删除成功！',
             type: 'success'
@@ -170,7 +165,13 @@ export default {
       this.fetchData()
     },
     handleEdit(index, row) {
-
+      this.$router.push({
+        path: '/Order',
+        name: 'EditOrder',
+        params: {
+          id: row._id
+        }
+      })
     },
     toggleSelection(rows) {
       if (rows) {
@@ -181,8 +182,21 @@ export default {
         this.$refs.multipleTable.clearSelection()
       }
     },
-    handleSelectionChange(val){
+    handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    massDeletion() {
+      const self = this
+      self.multipleSelection.forEach(function(value, index) {
+        self.$http.delete(`http://localhost:3000/Order/${value._id}`)
+      })
+      setTimeout(function() {
+        self.fetchData()
+        self.$message({
+          message: '删除成功！',
+          type: 'success'
+        })
+      }, 10)
     }
   }
 }

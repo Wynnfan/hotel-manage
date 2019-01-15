@@ -50,7 +50,6 @@ export default {
   data() {
     return {
       form1: {
-        workerId: null,
         username: null,
         password: null,
         pass: null,

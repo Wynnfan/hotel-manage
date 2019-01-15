@@ -2,7 +2,6 @@
   <el-card class="box-card" shadow="always">
     <div slot="header">
       <span>房间信息管理</span>
-      <!--<el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>-->
     </div>
     <el-table
       ref="multipleTable"
@@ -28,8 +27,6 @@
         label="房间类型">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <!--<p>详细描述: </p>-->
-            <!--<p>{{ scope.row.remark }}</p>-->
             <div slot="reference" class="name-wrapper">
               <el-tag>{{ scope.row.roomType }}</el-tag>
             </div>
@@ -45,27 +42,13 @@
           <el-tag type="primary">{{ scope.row.roomDiscount + '%' }}</el-tag>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-      <!--prop="desc"-->
-      <!--label="详细描述"/>-->
       <el-table-column
         prop="roomStatus"
         label="状态">
         <template slot-scope="scope">
-          <!--<el-tag :type="showStatus(scope.row.roomStatus)">{{ scope.row.roomStatus }}</el-tag>-->
           <el-button :type="showStatus(scope.row.roomStatus)" size="mini">{{ scope.row.roomStatus | formatStatus }}</el-button>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-      <!--label="修改时间|创建时间">-->
-      <!--<template slot-scope="scope">-->
-      <!--<i class="el-icon-time"/>-->
-      <!--<span style="margin-left: 10px">{{ scope.row.updateTime | formatDate }}</span>-->
-      <!--<br>-->
-      <!--<i class="el-icon-time"/>-->
-      <!--<span style="margin-left: 10px">{{ scope.row.createTime | formatDate }}</span>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -83,9 +66,17 @@
             <el-button slot="reference" :loading="scope.row.loading" size="mini" type="danger" @click="scope.row.visible2 = true">删除</el-button>
           </el-popover>
         </template>
-      </el-table-column>
     </el-table-column></el-table>
     <div style="padding: 14px;">
+      <el-pagination
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="list.length"
+        style="float: right"
+        background
+        layout="total, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
       <div class="bottom">
         <el-button type="primary" @click="navigateTo('add')">添加房间信息</el-button>
         <el-button type="danger" @click="massDeletion">批量删除</el-button>
@@ -95,8 +86,6 @@
 </template>
 
 <script>
-
-// import { getAllRoom, delRoom} from "../../api/roomInfo";
 
 export default {
   filters: {
@@ -114,13 +103,21 @@ export default {
       visible2: false,
       multipleSelection: [],
       list: [],
-      listLoading: true
+      listLoading: true,
+      currentPage: 1,
+      pageSize: 10
     }
   },
   created: function() {
     this.fetchData()
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageSize = val
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
     fetchData() {
       this.listLoading = true
       this.$http.get('http://localhost:3000/RoomInfo/').then(response => {
@@ -145,7 +142,7 @@ export default {
       row.loading = true
 
       this.$http.delete(`http://localhost:3000/RoomInfo/${row._id}`).then(response => {
-        if (response) {
+        if (response.data) {
           this.fetchData()
           this.$message({
             message: '删除成功！',

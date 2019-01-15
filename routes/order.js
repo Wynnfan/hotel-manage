@@ -6,39 +6,28 @@ const router = express.Router()
 router.get('/', (req, res) => {
   Order.find({
     is_removed: false
-  }).then(roomType => {
-    console.log(roomType)
-    res.json(roomType)
+  }).then(order => {
+    res.json(order)
   }).catch(err => {
     res.json(err)
   })
 })
 
 router.post('/add', (req, res) => {
-  // const roomInfo = {
-  //   roomType: req.body.roomType,
-  //   roomNumber: req.body.roomNumber,
-  //   roomDiscount: req.body.roomDiscount,
-  //   roomPrice: req.body.roomPrice,
-  //   roomStatus: req.body.roomStatus,
-  //   remark: req.body.remark,
-  //   is_removed: false
-  // }
-
-  Order.create(req.body, (err, roomInfos) => {
+  Order.create(req.body, (err, order) => {
     if (err) {
       console.log(err)
       res.json(err)
     } else {
-      res.json(roomInfos)
+      res.json(order)
     }
   })
 })
 
 router.get('/:id', (req, res) => {
   Order.findById(req.params.id)
-    .then(roomInfo => {
-      res.json(roomInfo)
+    .then(order => {
+      res.json(order)
     })
     .catch(err => {
       res.json(err)
@@ -48,17 +37,19 @@ router.get('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
   Order.findOneAndUpdate({ _id: req.params.id },
     { $set: {
+      'orderType': req.body.orderType,
       'roomType': req.body.roomType,
-      'roomPrice': req.body.roomPrice,
-      'roomDiscount': req.body.roomDiscount,
-      'roomNumber': req.body.roomNumber,
-      'roomStatus': req.body.roomStatus,
+      'name': req.body.name,
+      'orderDate': req.body.orderDate,
+      'phone': req.body.phone,
+      'orderDays': req.body.orderDays,
+      'orderCost': req.body.orderCost,
       'remark': req.body.remark
     }
     }, {
       new: true
     })
-    .then(roomType => res.json(roomType))
+    .then(order => res.json(order))
     .catch(err => res.json(err))
 })
 
@@ -72,7 +63,7 @@ router.delete('/:id', (req, res) => {
   }, {
     new: true
   })
-    .then(roomType => res.json(roomType))
+    .then(order => res.json(order))
     .catch(err => res.json(err))
 })
 

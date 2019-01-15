@@ -1,14 +1,14 @@
 <template>
   <div class="home">
-   <Header></Header>
-   <el-container>
-     <Aside />
-     <el-main>
-      <div class="main">
-        <router-view />
-      </div>
-     </el-main>
-   </el-container>
+    <Header/>
+    <el-container>
+      <Aside />
+      <el-main>
+        <div class="main">
+          <router-view />
+        </div>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -19,14 +19,14 @@
 // import Aside from '@/components/Aside.vue';
 // import Main from '@/components/Main.vue';
 export default {
-  name: 'home',
+  name: 'Home',
   components: {
-    HelloWorld,
-    Header,
-    Aside,
-    Main
+    // HelloWorld,
+    // Header,
+    // Aside,
+    // Main
   },
-  mounted(){
+  mounted() {
     // this.$http.get('http://198.162.1.103:3000/check',{withCredentials : true}).then(res=>{
     //   if(res.data.code===210){
     //     this.$message({

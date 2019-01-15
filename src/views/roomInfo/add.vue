@@ -114,13 +114,13 @@ export default {
         if (valid) {
           this.loading = true
           this.$http.post('http://localhost:3000/RoomInfo/add', this.roomInfo).then(response => {
-            if (response) {
+            if (response.data) {
               this.$message({
                 message: '提交成功！',
                 type: 'success'
               })
               this.loading = false
-              setTimeout(this.onCancel(), 20000)
+              setTimeout(this.onCancel(), 2000)
             } else {
               this.showError()
               this.loading = false

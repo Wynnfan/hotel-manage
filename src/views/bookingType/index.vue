@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="always">
     <div slot="header">
       <span>预订方式管理</span>
-      <el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>
+      <!--<el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>-->
     </div>
     <el-table
       ref="multipleTable"
@@ -14,25 +14,12 @@
       <el-table-column
         type="selection"
         width="55"/>
-      <!--<el-table-column-->
-        <!--prop="typeId"-->
-        <!--label="编号"/>-->
       <el-table-column
         prop="type"
         label="预订方式"/>
       <el-table-column
         prop="remark"
         label="详细描述"/>
-      <!--<el-table-column-->
-      <!--label="创建时间|修改时间">-->
-      <!--<template slot-scope="scope">-->
-      <!--<i class="el-icon-time"/>-->
-      <!--<span style="margin-left: 10px">{{ scope.row.createTime | formatDate }}</span>-->
-      <!--<br>-->
-      <!--<i class="el-icon-time"/>-->
-      <!--<span style="margin-left: 10px">{{ scope.row.updateTime | formatDate }}</span>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -53,6 +40,15 @@
       </el-table-column>
     </el-table>
     <div style="padding: 14px;">
+      <el-pagination
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="list.length"
+        style="float: right"
+        background
+        layout="total, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
       <div class="bottom">
         <el-button type="primary" @click="handleAdd()">添加预订方式</el-button>
         <el-dialog :visible.sync="dialogFormVisible" title="添加预订方式">
@@ -81,6 +77,8 @@
 export default {
   data() {
     return {
+      currentPage: 1,
+      pageSize: 10,
       visible2: false,
       isEdit: false,
       list: null,
@@ -101,6 +99,12 @@ export default {
     this.fetchData()
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageSize = val
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
     fetchData() {
       this.list = null
       this.listLoading = true
@@ -112,7 +116,7 @@ export default {
     add() {
       this.addBtnLoading = true
       this.$http.post('http://localhost:3000/BookingType/add', this.form).then(res => {
-        if (res) {
+        if (res.data.length) {
           this.$message({
             message: '添加成功！',
             type: 'success'
@@ -125,7 +129,6 @@ export default {
           })
         }
       }).catch(err => {
-        console.log(err)
         this.$message({
           message: '添加失败！',
           type: 'error'
@@ -139,7 +142,7 @@ export default {
     edit() {
       this.addBtnLoading = true
       this.$http.put(`http://localhost:3000/BookingType/${this.id}`, this.form).then(res => {
-        if (res) {
+        if (res.data.length) {
           this.$message({
             message: '编辑成功！',
             type: 'success'

@@ -1,25 +1,5 @@
 <template>
   <el-container id="container">
-    <!-- <el-header >
-        <span style="float: left">酒店管理系统</span>
-
-        <el-button-group>
-          <el-button type="primary" icon="el-icon-arrow-left">入住登记</el-button>
-          <el-button type="primary">退房登记<i class="el-icon-arrow-right el-icon--right"></i></el-button>
-        </el-button-group>
-
-        <el-dropdown>
-          <el-button  type="primary"><el-badge is-dot class="item">username</el-badge></el-button>
-
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click="isCollapse = true">查看</el-dropdown-item>
-            <el-dropdown-item>新增</el-dropdown-item>
-            <el-dropdown-item>删除</el-dropdown-item>
-            <el-dropdown-item><el-button  @click="isCollapse=!isCollapse">s</el-button></el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-
-      </el-header> -->
     <el-header>
       <div class="header">
         <div class="header-left">
@@ -34,7 +14,7 @@
           </div>
           <el-dropdown trigger="click" @command="dropdownComm">
             <span class="el-dropdown-link">
-              admin
+              {{ name }}
               <i class="el-icon-arrow-down el-icon--right"/>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -44,7 +24,8 @@
             </el-dropdown-menu>
           </el-dropdown>
           <div class="admin-logo">
-            <img src="../../assets/images/login-left.jpg" alt="adminLogo">
+            <img v-if="role == 'admin'" src="../../assets/images/login-left.jpg" alt="adminLogo">
+            <img v-else src="../../assets/images/Hippopx.jpg" alt="adminLogo">
           </div>
         </div>
       </div>
@@ -115,7 +96,8 @@ export default {
     return {
       isCollapse: false,
       bFullScreen: false,
-      role: ''
+      role: '',
+      name: ''
     }
   },
   created: function() {
@@ -123,9 +105,11 @@ export default {
   },
   methods: {
     fetchData() {
-      const user = localStorage.getItem('RememberUser')
-      if (user) {
-        this.role = user.role
+      this.role = localStorage.getItem('role')
+      if (this.role === 'admin') {
+        this.name = '管理员'
+      } else {
+        this.name = '操作员'
       }
     },
     fFullScreen() { // 全屏事件
@@ -166,7 +150,7 @@ export default {
           this.$router.push({ path: '/lock' })
           break
         case 'logout': // 退出系统
-          this.$http.post('http://192.168.1.103:3000/logout', { withCredentials: true }).then(res => {
+          this.$http.post('http://localhost:3000/logout', { withCredentials: true }).then(res => {
             if (res.data.code === 200) {
               this.$message({
                 showClose: true,
@@ -196,7 +180,7 @@ export default {
       this.$router.push(val)
     },
     handleNav() {
-      this.isCollapse = this.isCollapse == false
+      this.isCollapse = this.isCollapse === false
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath)

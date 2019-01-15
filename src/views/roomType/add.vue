@@ -110,7 +110,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$http.post('http://localhost:3000/RoomType/add', this.roomInfo).then(response => {
-            if (response) {
+            if (response.data) {
               this.$message({
                 message: '提交成功！',
                 type: 'success'

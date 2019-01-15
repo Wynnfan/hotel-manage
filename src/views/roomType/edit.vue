@@ -112,7 +112,6 @@ export default {
         this.onCancel()
       }
       this.$http.get(`http://localhost:3000/RoomType/${this.id}`).then(res => {
-        console.log(res)
         this.form1 = res.data
       })
     },
@@ -121,7 +120,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$http.put(`http://localhost:3000/RoomType/${this.id}`, this.form1).then(response => {
-            if (response) {
+            if (response.data) {
               this.$message({
                 message: '提交成功！',
                 type: 'success'

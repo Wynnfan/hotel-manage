@@ -7,7 +7,6 @@ router.get('/', (req, res) => {
   BookingType.find({
     is_removed: false
   }).then(bookingType => {
-    console.log(bookingType)
     res.json(bookingType)
   }).catch(err => {
     res.json(err)

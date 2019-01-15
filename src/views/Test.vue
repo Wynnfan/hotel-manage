@@ -25,7 +25,7 @@ export default {
   },
   methods:{
     fGetRoom(){
-      this.$http.get('http://192.168.1.103:3000/getRoom').then(res=>{
+      this.$http.get('http://localhost:3000/getRoom').then(res =>{
         this.notOpened=res.data.notOpen;
         this.open=res.data.open;
         console.log(res)

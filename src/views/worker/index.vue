@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="always">
     <div slot="header">
       <span>操作员管理</span>
-      <el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>
+      <!--<el-button type="primary" style="float: right; padding: 6px 12px" icon="el-icon-search">搜索</el-button>-->
     </div>
     <el-table
       ref="multipleTable"
@@ -14,33 +14,27 @@
         type="selection"
         width="55"/>
       <el-table-column
-        prop="workerId"
-        label="编号"/>
+        prop="account"
+        label="用户名"/>
       <el-table-column
         prop="name"
         label="姓名"/>
       <el-table-column
-        prop="username"
-        label="用户名"/>
-      <el-table-column
         prop="phone"
         label="手机号"/>
+      <el-table-column
+        prop="gender"
+        label="性别">
+        <template slot-scope="scope">
+          <span>{{ scope.row.gender }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="email"
         label="电子邮箱"/>
       <el-table-column
         prop="address"
         label="地址"/>
-      <el-table-column
-        label="修改时间|创建时间">
-        <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span style="margin-left: 10px">{{ scope.row.updateTime | formatDate }}</span>
-          <br>
-          <i class="el-icon-time"/>
-          <span style="margin-left: 10px">{{ scope.row.createTime | formatDate }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -61,23 +55,33 @@
       </el-table-column>
     </el-table>
     <div style="padding: 14px;">
+      <el-pagination
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="list.length"
+        style="float: right"
+        background
+        layout="total, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
       <div class="bottom">
         <el-button type="primary" @click="navigateTo('add')">添加操作员</el-button>
-        <el-button type="danger">批量删除</el-button>
+        <el-button type="danger" @click="massDeletion">批量删除</el-button>
       </div>
     </div>
   </el-card>
 </template>
 
 <script>
-import { getAll, del } from '@/api/worker'
 
 export default {
   data() {
     return {
+      currentPage: 1,
+      pageSize: 10,
       visible2: false,
       multipleSelection: [],
-      list: null,
+      list: [],
       listLoading: true
     }
   },
@@ -85,10 +89,17 @@ export default {
     this.fetchData()
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageSize = val
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
     fetchData() {
       this.listLoading = true
-      getAll().then(response => {
-        this.list = response
+      this.$http.get('http://localhost:3000/User/').then(response => {
+        console.log(response)
+        this.list = response.data
         this.listLoading = false
       })
     },
@@ -100,16 +111,16 @@ export default {
         path: '/worker',
         name: 'EditWorker',
         params: {
-          id: row.workerId
+          id: row._id
         }
       })
     },
     handleDel(row) {
       row.visible2 = false
       row.loading = true
-      del(row.workerId).then(response => {
-        if (response === 1) {
-          this.list = null
+      this.$http.delete(`http://localhost:3000/User/${row._id}`).then(response => {
+        if (response.data) {
+          this.fetchData()
           this.$message({
             message: '删除成功！',
             type: 'success'
@@ -120,9 +131,9 @@ export default {
             type: 'error'
           })
         }
+        row.loading = false
+        this.fetchData()
       })
-      row.loading = false
-      this.fetchData()
     },
     toggleSelection(rows) {
       if (rows) {
@@ -135,6 +146,19 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    massDeletion() {
+      let self = this
+      self.multipleSelection.forEach(function(value, index) {
+        self.$http.delete(`http://localhost:3000/User/${value._id}`)
+      })
+      setTimeout(function() {
+        self.fetchData()
+        self.$message({
+          message: '删除成功！',
+          type: 'success'
+        })
+      }, 10)
     }
   }
 }
