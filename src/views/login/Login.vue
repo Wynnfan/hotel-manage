@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import store from '@/store'
 import crypto from 'crypto'
 export default {
   name: 'Login',
