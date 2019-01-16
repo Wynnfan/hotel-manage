@@ -1,11 +1,10 @@
 
-
 const vFilter = {
-  hasWindow: function (val) {
-    if (val >= 1 ) return '有窗'
+  hasWindow: function(val) {
+    if (val >= 1) return '有窗'
     else return '没有'
   },
-  formatDate: function (value) {
+  formatDate: function(value) {
     var d = new Date(value)
     var year = d.getFullYear()
     var month = d.getMonth() + 1
@@ -17,61 +16,61 @@ const vFilter = {
     return year + '-' + month + '-' + day
   },
   addDate: function(date, days) {
-    if (days == undefined || days == '') {
-      days = 1;
+    if (days === undefined || days === '') {
+      days = 1
     }
-    var d = new Date(date);
-    d.setDate(d.getDate() + days);
+    var d = new Date(date)
+    d.setDate(d.getDate() + days)
     var year = d.getFullYear()
-    var month = d.getMonth() + 1;
+    var month = d.getMonth() + 1
     var day = d.getDate() < 10 ? '0' + d.getDate() : '' + d.getDate()
     return year + '-' + month + '-' + day
   },
-  getOrderStatus: function (val) {
+  getOrderStatus: function(val) {
     var status = ''
     switch (val) {
       case -1:
         status = '已取消'
-        break;
+        break
       case 0:
         status = '未付款'
-        break;
+        break
       case 1:
         status = '已付款'
-        break;
+        break
       case 2:
         status = '已入住'
-        break;
+        break
       case -2:
         status = '订单超时'
-        break;
+        break
       case -3:
         status = '被删除'
-            break;
+        break
     }
     return status
   },
-  getStatusColor(val){
+  getStatusColor(val) {
     var status = ''
     switch (val) {
       case -2:
         status = 'info'
-        break;
+        break
       case -1:
         status = ''
-        break;
+        break
       case 0:
         status = 'error'
-        break;
+        break
       case 1:
         status = 'success'
-        break;
+        break
       case 2:
         status = 'primary'
-        break;
+        break
       case -3:
         status = 'info'
-        break;
+        break
     }
     return status
   }

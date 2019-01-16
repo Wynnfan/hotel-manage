@@ -43,7 +43,7 @@
       <el-pagination
         :current-page="currentPage"
         :page-size="pageSize"
-        :total="list.length"
+        :total="total"
         style="float: right"
         background
         layout="total, prev, pager, next, jumper"
@@ -81,7 +81,8 @@ export default {
       pageSize: 10,
       visible2: false,
       isEdit: false,
-      list: null,
+      list: [],
+      total: 0,
       listLoading: false,
       multipleSelection: [],
       form: {
@@ -110,13 +111,14 @@ export default {
       this.listLoading = true
       this.$http.get('http://localhost:3000/BookingType/').then(response => {
         this.list = response.data
+        this.total = response.data.length
         this.listLoading = false
       })
     },
     add() {
       this.addBtnLoading = true
       this.$http.post('http://localhost:3000/BookingType/add', this.form).then(res => {
-        if (res.data.length) {
+        if (res.data) {
           this.$message({
             message: '添加成功！',
             type: 'success'
@@ -142,7 +144,7 @@ export default {
     edit() {
       this.addBtnLoading = true
       this.$http.put(`http://localhost:3000/BookingType/${this.id}`, this.form).then(res => {
-        if (res.data.length) {
+        if (res.data) {
           this.$message({
             message: '编辑成功！',
             type: 'success'

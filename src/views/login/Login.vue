@@ -137,18 +137,18 @@ export default {
             localStorage.setItem('RememberUser', JSON.stringify({ user: accountInfo.name, password: accountInfo.password, status: this.checkBoxFlag }))
           }
 
-          let message = '登陆正确'
-          let type = 'success'
-
           this.$http.post('http://localhost:3000/User/login', accountInfo).then(res => {
-            message = res.data.msg
+
+            let message = res.data.msg
+            let type = ''
 
             if (res.data.code === 200) {
+              type = 'success'
               window.localStorage.setItem('loginToken', res.data.token)
               window.localStorage.setItem('role', res.data.role)
               setTimeout(() => {
                 this.$router.push({ path: '/' })
-              }, 3000)
+              }, 1500)
             } else {
               type = 'error'
             }
@@ -167,7 +167,6 @@ export default {
             // window.localStorage.setItem('userLogin', JSON.stringify(userLogin))
           })
 
-          this.bBtnLoginStatus = false
         } else {
           this.$message({
             showClose: true,
