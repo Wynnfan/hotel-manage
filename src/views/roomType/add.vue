@@ -80,8 +80,7 @@
   </el-card>
 </template>
 <script>
-import { addRoomType } from '@/api/roomType'
-import ElCard from "element-ui/packages/card/src/main";
+import ElCard from 'element-ui/packages/card/src/main'
 export default {
   components: {ElCard},
   data() {

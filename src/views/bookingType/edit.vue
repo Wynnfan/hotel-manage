@@ -45,7 +45,6 @@
   </div>
 </template>
 <script>
-import { update, getById } from '@/api/worker'
 export default {
   data() {
     return {

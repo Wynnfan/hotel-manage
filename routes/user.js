@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
 router.post('/add', (req, res) => {
   User.find({ account: req.body.account }).then(user => {
-    if (user) {
+    if (user.length) {
       res.json({ code: 201, msg: '用户名已存在，请重新设置用户名' })
     } else {
       User.create(req.body, (err, user) => {

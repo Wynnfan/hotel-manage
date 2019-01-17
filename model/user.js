@@ -33,12 +33,10 @@ const UserSchema = new Schema({
     }
   },
   email: {
-    type: String,
-    required: true
+    type: String
   },
   address: {
-    type: String,
-    required: true
+    type: String
   },
   is_removed: {
     type: Boolean,
